@@ -3,9 +3,17 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import {
-    TextField, Button, Container, Grid, Typography, Box,
+    TextField, Button, Container, Grid, Typography, Box, MenuItem, Select, InputLabel, FormControl,
 } from '@mui/material';
-import {jwtDecode} from 'jwt-decode'; // Import jwt-decode
+import {jwtDecode} from 'jwt-decode'; // Corrected import
+
+const genres = [
+    "Science Fiction", "Fantasy", "Horror", "Mystery", "Thriller", "Romance",
+    "Historical Fiction", "Dystopian", "Utopian", "Young Adult (YA)", "Children's Literature",
+    "Graphic Novels", "Biography", "Autobiography", "History", "Science", "Technology",
+    "Self-Help", "Psychology", "Philosophy", "Religion", "Politics", "Economics",
+    "Cookbooks", "Travel Guides", "True Crime", "Poetry", "Drama", "Essay"
+];
 
 export default function AddBook() {
     const router = useRouter();
@@ -18,8 +26,8 @@ export default function AddBook() {
         publisher: '',
         imagePath: '',
         description: '',
-        username: '', // Added username field
-        email: '',    // Added email field
+        username: '', 
+        email: '',   
     });
 
     const [error, setError] = useState('');
@@ -110,15 +118,23 @@ export default function AddBook() {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField
-                                name="genre"
-                                required
-                                fullWidth
-                                id="genre"
-                                label="Genre"
-                                value={bookDetails.genre}
-                                onChange={handleChange}
-                            />
+                            <FormControl fullWidth required>
+                                <InputLabel id="genre-label">Genre</InputLabel>
+                                <Select
+                                    labelId="genre-label"
+                                    id="genre"
+                                    name="genre"
+                                    value={bookDetails.genre}
+                                    onChange={handleChange}
+                                    label="Genre"
+                                >
+                                    {genres.map((genre) => (
+                                        <MenuItem key={genre} value={genre}>
+                                            {genre}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Grid item xs={12}>
                             <TextField

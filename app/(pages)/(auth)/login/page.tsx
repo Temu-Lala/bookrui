@@ -1,4 +1,5 @@
 'use client';
+'use client';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -8,7 +9,7 @@ import {
 import Booklogo from '../../../../public/assets/book.png'; // Adjust path if needed
 import Image from 'next/image';
 import {jwtDecode} from 'jwt-decode'; // Import jwt-decode at the top
-import books from '../../books/page'
+
 const LoginPage = () => {
   const router = useRouter();
   const [formValues, setFormValues] = React.useState({
@@ -27,8 +28,7 @@ const LoginPage = () => {
     });
   };
 
-
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setLoading(true);
@@ -36,52 +36,49 @@ const handleSubmit = async (e) => {
     setSuccess(null);
 
     try {
-        const response = await axios.post('http://localhost:3001/', formValues, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+      const response = await axios.post('http://localhost:3001/', formValues, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-        if (response.status === 200) {
-            const { token } = response.data;
-            localStorage.setItem('token', token); // Save JWT token to local storage
+      if (response.status === 200) {
+        const { token } = response.data;
+        localStorage.setItem('token', token); // Save JWT token to local storage
 
-            // Decode the token to extract user role
-            const decodedToken = jwtDecode(token);
-            const userRole = decodedToken.role;
+        // Decode the token to extract user role
+        const decodedToken = jwtDecode(token);
+        const userRole = decodedToken.role;
 
-            setSuccess('Login successful!');
+        setSuccess('Login successful!');
 
-            // Redirect based on role
-            if (userRole === 'user') {
-                router.push('../../books/');
-            } else if (userRole === 'owner') {
-                router.push('/owner');
-            } else if (userRole === 'admin') {
-                router.push('/admin');
-            } else {
-                setError('Unknown role');
-            }
+        // Redirect based on role
+        if (userRole === 'user') {
+          router.push('/books');
+        } else if (userRole === 'owner') {
+          router.push('/owner');
+        } else if (userRole === 'admin') {
+          router.push('/admin');
         } else {
-            setError('Failed to log in');
+          setError('Unknown role');
         }
+      } else {
+        setError('Failed to log in');
+      }
     } catch (err) {
-        setError("Login failed. Please try again.");
-        console.error(err);
+      setError("Login failed. Please try again.");
+      console.error(err);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
-
+  };
 
   return (
     <Container
-      component="main"
       sx={{
         display: 'flex',
         flexDirection: 'row',
         height: '100vh',
-        width: '100vw',
         padding: 0,
         overflow: 'hidden', // Prevents horizontal scroll
       }}
@@ -90,7 +87,8 @@ const handleSubmit = async (e) => {
         sx={{
           flex: 1,
           position: 'relative',
-          overflow: 'hidden',
+          width: '50%', // Ensure it covers half the screen
+          height: '100vh', // Ensure it covers the full height
         }}
       >
         <Image
@@ -98,10 +96,9 @@ const handleSubmit = async (e) => {
           alt="Logo Image"
           layout="fill"
           objectFit="cover"
-          style={{ width: '100%', height: '100%' }}
-          // Ensures image covers the entire box
         />
       </Box>
+
       <Box
         sx={{
           flex: 1,
@@ -109,8 +106,8 @@ const handleSubmit = async (e) => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 4,
-          overflow: 'auto', // Allows scrolling if content overflows
+          width: '50%', // Ensure it covers half the screen
+          height: '100vh', // Ensure it covers the full height
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
@@ -164,7 +161,7 @@ const handleSubmit = async (e) => {
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </Button>
-          <Link href="/pages/auth/register" variant="body2">
+          <Link href="/register" variant="body2">
             {"Don't have an account? Sign Up"}
           </Link>
         </Box>

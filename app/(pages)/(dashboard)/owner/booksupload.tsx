@@ -1,11 +1,19 @@
-
-
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import {
-    TextField, Button, Container, Grid, Typography, Box,
+    TextField, Button, Container, Grid, Typography, Box, MenuItem, Select, InputLabel, FormControl, Snackbar, Alert
 } from '@mui/material';
+import {jwtDecode} from 'jwt-decode'; 
+
+const genres = [
+    "Science Fiction", "Fantasy", "Horror", "Mystery", "Thriller", "Romance",
+    "Historical Fiction", "Dystopian", "Utopian", "Young Adult (YA)", "Children's Literature",
+    "Graphic Novels", "Biography", "Autobiography", "History", "Science", "Technology",
+    "Self-Help", "Psychology", "Philosophy", "Religion", "Politics", "Economics",
+    "Cookbooks", "Travel Guides", "True Crime", "Poetry", "Drama", "Essay"
+];
 
 export default function AddBook() {
     const router = useRouter();
@@ -14,11 +22,14 @@ export default function AddBook() {
         author: '',
         genre: '',
         price: '',
-        publicationDate: '',
+        publicationdate: '',
         publisher: '',
         imagePath: '',
-        description:'',
+        description: '',
     });
+
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false); // State for controlling the success toast
 
     const handleChange = (e) => {
         setBookDetails({
@@ -30,33 +41,64 @@ export default function AddBook() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No token found in localStorage');
+            setError('No token found. Please log in.');
+            return;
+        }
+
+        const decodedToken = jwtDecode(token);
+        if (decodedToken.role !== 'owner') {
+            console.error('Unauthorized: Only owners can upload books');
+            setError('You are not authorized to upload books.');
+            return;
+        }
+
+        const bookDataWithUser = {
+            ...bookDetails,
+            username: decodedToken.username, // Add username to book details
+            email: decodedToken.email,       // Add email to book details
+        };
+
         try {
-            const response = await fetch('http://localhost:3001/books', {
-                method: 'POST',
+            const response = await axios.post('http://localhost:3001/books', bookDataWithUser, {
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // Pass the token in the Authorization header
                 },
-                body: JSON.stringify(bookDetails),
             });
 
-            if (response.ok) {
-                router.push('/'); // Redirect to a different page or display success message
+            if (response.status === 201) {
+                setSuccess(true); // Show success toast
+                router.push('/'); // Redirect to a different page after 2 seconds
             } else {
                 console.error('Failed to add book');
+                setError('Failed to add book.');
             }
         } catch (error) {
             console.error('Error:', error);
+            setError('An error occurred while adding the book.');
         }
+    };
+
+    const handleClose = () => {
+        setSuccess(false); // Close the toast
     };
 
     return (
         <Container component="main" maxWidth="xs">
-            <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column',  }}>
                 <Typography component="h1" variant="h5">
                     Add a New Book
                 </Typography>
+                {error && (
+                    <Typography color="error" variant="body2" sx={{ mb: 2 }}>
+                        {error}
+                    </Typography>
+                )}
                 <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={1}>
                         <Grid item xs={12}>
                             <TextField
                                 name="title"
@@ -80,15 +122,23 @@ export default function AddBook() {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField
-                                name="genre"
-                                required
-                                fullWidth
-                                id="genre"
-                                label="Genre"
-                                value={bookDetails.genre}
-                                onChange={handleChange}
-                            />
+                            <FormControl fullWidth required>
+                                <InputLabel id="genre-label">Genre</InputLabel>
+                                <Select
+                                    labelId="genre-label"
+                                    id="genre"
+                                    name="genre"
+                                    value={bookDetails.genre}
+                                    onChange={handleChange}
+                                    label="Genre"
+                                >
+                                    {genres.map((genre) => (
+                                        <MenuItem key={genre} value={genre}>
+                                            {genre}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -104,7 +154,7 @@ export default function AddBook() {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                name="publicationDate"
+                                name="publicationdate"
                                 required
                                 fullWidth
                                 id="publicationDate"
@@ -144,8 +194,8 @@ export default function AddBook() {
                                 name="description"
                                 required
                                 fullWidth
-                                id="publisher"
-                                label="description"
+                                id="description"
+                                label="Description"
                                 multiline
                                 rows={4}
                                 value={bookDetails.description}
@@ -162,6 +212,12 @@ export default function AddBook() {
                         Add Book
                     </Button>
                 </Box>
+                {/* Success Snackbar */}
+                <Snackbar open={success} autoHideDuration={2000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                        Successfully uploaded!
+                    </Alert>
+                </Snackbar>
             </Box>
         </Container>
     );

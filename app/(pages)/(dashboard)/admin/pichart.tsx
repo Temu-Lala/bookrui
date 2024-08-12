@@ -5,11 +5,14 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-const data = [
-  { value: 5, label: 'Fiction ', color: '#FF5733' },
-  { value: 10, label: 'Self center ', color: '#33FF57' },
-  { value: 15, label: 'Pyschology', color: '#3357FF' },
-  
+const genres = [
+  { value: 12, label: 'Science Fiction', color: '#FF5733' },
+  { value: 8, label: 'Fantasy', color: '#33FF57' },
+  { value: 10, label: 'Horror', color: '#3357FF' },
+  { value: 7, label: 'Mystery', color: '#FF33A6' },
+  { value: 9, label: 'Thriller', color: '#FFBF00' },
+
+  // Additional genres if needed
 ];
 
 const size = {
@@ -21,7 +24,7 @@ const StyledText = styled('text')(({ theme }) => ({
   fill: theme.palette.text.primary,
   textAnchor: 'middle',
   dominantBaseline: 'central',
-  fontSize: 10,
+  fontSize: 14,
 }));
 
 function PieCenterLabel({ children }: { children: React.ReactNode }) {
@@ -35,12 +38,40 @@ function PieCenterLabel({ children }: { children: React.ReactNode }) {
 
 export default function PieChartWithCenterLabel() {
   return (
-    <Box display="flex" flexDirection="column" alignItems="center"   >
-      <PieChart sx={{paddingLeft:'20px'}} series={[{ data: data.map(({ value }) => ({ value })), innerRadius: 80 }]} {...size}>
-        <PieCenterLabel>Center label</PieCenterLabel>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: 2,
+        boxSizing: 'border-box',
+        width: '100%',
+        height: '100%',
+        maxWidth: 500, // Adjusted for better fit
+        maxHeight:500,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 2,
+        boxShadow: 2,
+        backgroundColor: 'background.paper',
+      }}
+    >
+      <PieChart
+        sx={{ width: '100%', height: 'auto' }}
+        series={[{ data: genres, innerRadius: 80 }]} // Use full data array
+        {...size}
+      >
+        <PieCenterLabel>Genres</PieCenterLabel>
       </PieChart>
-      <Box >
-        {data.map((item) => (
+      <Box
+        sx={{
+          marginTop: 2,
+          width: '100%',
+          maxWidth: 500,
+          padding: 1,
+        }}
+      >
+        {/* {genres.map((item) => (
           <Box key={item.label} display="flex" alignItems="center" mb={1}>
             <Box
               sx={{
@@ -55,7 +86,7 @@ export default function PieChartWithCenterLabel() {
               {item.label}: {item.value}
             </Typography>
           </Box>
-        ))}
+        ))} */}
       </Box>
     </Box>
   );

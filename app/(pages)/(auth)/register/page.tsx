@@ -204,7 +204,7 @@ const RegistrationForm = () => {
         >
           {loading ? 'Submitting...' : 'Sign Up'}
         </Button>
-        <Link href="/pages/auth/login" variant="body2">
+        <Link href="/login" variant="body2">
           Already have an account? Sign in
         </Link>
       </Box>

@@ -6,10 +6,9 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 const data = [
-  { value: 5, label: 'Fiction ', color: '#FF5733' },
-  { value: 10, label: 'Self center ', color: '#33FF57' },
-  { value: 15, label: 'Pyschology', color: '#3357FF' },
-  
+  { value: 5, label: 'Fiction', color: '#FF5733' },
+  { value: 10, label: 'Self Center', color: '#33FF57' },
+  { value: 15, label: 'Psychology', color: '#3357FF' },
 ];
 
 const size = {
@@ -21,7 +20,7 @@ const StyledText = styled('text')(({ theme }) => ({
   fill: theme.palette.text.primary,
   textAnchor: 'middle',
   dominantBaseline: 'central',
-  fontSize: 10,
+  fontSize: 14, // Adjust font size as needed
 }));
 
 function PieCenterLabel({ children }: { children: React.ReactNode }) {
@@ -35,11 +34,39 @@ function PieCenterLabel({ children }: { children: React.ReactNode }) {
 
 export default function PieChartWithCenterLabel() {
   return (
-    <Box display="flex" flexDirection="column" alignItems="center"   >
-      <PieChart sx={{paddingLeft:'60px'}} series={[{ data: data.map(({ value }) => ({ value })), innerRadius: 80 }]} {...size}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: 2,
+        boxSizing: 'border-box',
+        width: '100%',
+        height: '100%',
+        maxWidth: 400, // Ensure the chart doesn't get too large
+        maxHeight: 400,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 2,
+        boxShadow: 2,
+        backgroundColor: 'background.paper',
+      }}
+    >
+      <PieChart
+        sx={{ width: '100%', height: 'auto' }}
+        series={[{ data: data.map(({ value }) => ({ value })), innerRadius: 80 }]}
+        {...size}
+      >
         <PieCenterLabel>This Week</PieCenterLabel>
       </PieChart>
-      <Box >
+      <Box
+        sx={{
+          marginTop: 2,
+          width: '100%',
+          maxWidth: 400,
+          padding: 1,
+        }}
+      >
         {data.map((item) => (
           <Box key={item.label} display="flex" alignItems="center" mb={1}>
             <Box
