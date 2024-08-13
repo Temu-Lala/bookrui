@@ -6,6 +6,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import Footer from '../../components/footer'
+import Navbar from '../../components/navBar'
 const AboutSection = styled(Box)(({ theme }) => ({
   padding: theme.spacing(8, 0),
   backgroundColor: '#1a2840', // Changed background color
@@ -14,9 +15,9 @@ const AboutSection = styled(Box)(({ theme }) => ({
 
 const DeveloperSection = styled(Box)(({ theme }) => ({
   padding: theme.spacing(8, 0),
-  backgroundColor: '#1a2840', // Changed background color
+  backgroundColor: '#1a2840', 
   textAlign: 'center',
-  color: '#ffffff', // Changed text color
+  color: '#ffffff', // text color
 }));
 
 const DeveloperCard = styled(Box)(({ theme }) => ({
@@ -33,6 +34,7 @@ const DeveloperCard = styled(Box)(({ theme }) => ({
 const About: React.FC = () => {
   return (
     <Container maxWidth="lg">
+      <Navbar/>
       <AboutSection>
         <Typography variant="h3" align="center" gutterBottom>
           About the Website

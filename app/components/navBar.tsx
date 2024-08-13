@@ -15,7 +15,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
-
+import HomeIcon from '@mui/icons-material/Home';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -97,6 +97,10 @@ export default function PrimarySearchAppBar() {
     router.push('/login');
   };
 
+  const handlehomeClick = () => {
+    router.push('/');
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: '#3e2723' }}>
@@ -129,6 +133,7 @@ export default function PrimarySearchAppBar() {
               onChange={handleSearchChange}
               onFocus={() => setIsDropdownOpen(!!searchTerm)}
             />
+          
             {isDropdownOpen && searchResults.length > 0 && (
               <ClickAwayListener onClickAway={handleClickAway}>
                 <Paper sx={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 10 }}>
@@ -147,6 +152,17 @@ export default function PrimarySearchAppBar() {
               </ClickAwayListener>
             )}
           </Search>
+          <IconButton
+          color='inherit'
+          onClick={handlehomeClick}
+          
+          
+          >
+          <HomeIcon/>
+              
+              
+          </IconButton>
+              
           <Box sx={{ flexGrow: 1 }} />
           <IconButton
             size="large"

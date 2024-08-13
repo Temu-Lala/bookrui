@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { TextField, Button, Grid, Container, Typography, Box } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import Footer from '../../components/footer';
-
+import Navbar from '../../components/navBar'
 const ContactPage = () => {
     const [formData, setFormData] = useState({ name: '', email: '', message: '' });
     const [errors, setErrors] = useState({ name: '', email: '', message: '' });
@@ -50,6 +50,7 @@ const ContactPage = () => {
 
     return (
         <Container maxWidth="sm">
+              <Navbar/>
             <Box sx={{ mt: 5 }}>
                 <Typography variant="h4" component="h1" align="center" gutterBottom>
                     Contact Us
@@ -108,7 +109,7 @@ const ContactPage = () => {
                     </Grid>
                 </form>
             </Box>
-           
+         
         </Container>
         
     );
