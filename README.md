@@ -1,36 +1,138 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+#Cheack the Screensoot in the bookrui have a folder screenshoot cheack what it looks like the whole informatio 
+---
 
-## Getting Started
+# Bookr
 
-First, run the development server:
+Bookr is a modern book management application built using Next.js, Node.js, PostgreSQL, and Material UI. It allows users to manage books, user accounts, and view detailed information about books. The application features user authentication, role management, and a comprehensive API for interacting with book data.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Technologies Used
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Frontend**: Next.js, Material UI, Axios
+- **Backend**: Node.js, Express.js
+- **Database**: PostgreSQL
+- **Authentication**: JWT (JSON Web Tokens)
+- **Others**: bcrypt for password hashing, CORS for cross-origin requests
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Frontend**: Next.js project with Material UI for styling and Axios for making HTTP requests.
+- **Backend**: Node.js server with Express.js handling API endpoints and PostgreSQL for data storage.
 
-## Learn More
+## Installation
 
-To learn more about Next.js, take a look at the following resources:
+### Backend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone the Repository:**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   ```bash
+   git clone (https://github.com/Temu-Lala)/bookr.git
+   cd bookr
+   ```
 
-## Deploy on Vercel
+2. **Navigate to the Backend Directory:**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   cd backend
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+3. **Install Dependencies:**
+
+   ```bash
+   npm install
+   ```
+#dont forget to get bookrbackend 
+
+4. **Set Up PostgreSQL:**
+   
+   Make sure PostgreSQL is installed and running. Update the `clientConfig` and `poolConfig` in `server.js` with your PostgreSQL credentials.
+
+5. **Start the Backend Server:**
+
+   ```bash
+   npm start
+   ```
+
+### Frontend
+
+1. **Navigate to the Frontend Directory:**
+
+   ```bash
+   cd ../frontend
+   ```
+
+2. **Install Dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Start the Frontend Server:**
+
+   ```bash
+   npm run dev
+   ```
+
+## API Endpoints
+
+### User Endpoints
+
+- **POST `/register`**: Register a new user.
+  - **Body**: `{ username, email, location, phone, password }`
+  - **Response**: `{ id, username, email, location, phone, role }`
+
+- **POST `/`**: User login.
+  - **Body**: `{ email, password }`
+  - **Response**: `{ token, role }`
+
+- **GET `/users`**: Fetch all users.
+  - **Response**: `[ { id, username, email, location, phone, role }, ... ]`
+
+- **PUT `/users/:id/role`**: Update user role.
+  - **Body**: `{ role }`
+  - **Response**: `{ id, username, email, location, phone, role }`
+
+### Book Endpoints
+
+- **POST `/books`**: Add a new book.
+  - **Body**: `{ title, genre, price, imagePath, author, publicationdate, publisher, description }`
+  - **Response**: `{ id, title, genre, price, imagePath, author, publicationdate, publisher, description, username, email, created_at }`
+
+- **GET `/books`**: Fetch all books.
+  - **Response**: `[ { id, title, genre, price, imagePath, author, publicationdate, publisher, description, username, email, created_at }, ... ]`
+
+- **GET `/books/:id`**: Fetch a single book by ID.
+  - **Response**: `{ id, title, genre, price, imagePath, author, publicationdate, publisher, description, username, email, created_at }`
+
+- **GET `/booksusername`**: Fetch books by username.
+  - **Query Parameter**: `username`
+  - **Response**: `[ { id, title, genre, price, imagePath, author, publicationdate, publisher, description, username, email, created_at }, ... ]`
+
+- **GET `/books/daily`**: Get daily book counts.
+  - **Response**: `[ { date, count }, ... ]`
+
+- **GET `/search`**: Search for books by title.
+  - **Query Parameter**: `title`
+  - **Response**: `[ { id, title, genre, price, imagePath, author, publicationdate, publisher, description, username, email, created_at }, ... ]`
+
+## Usage
+
+1. **Register a New User**: Use the `/register` endpoint with user details.
+2. **Login**: Use the `/` endpoint with email and password to obtain a JWT token.
+3. **Add a Book**: Use the `/books` endpoint with book details. Include the JWT token in the Authorization header.
+4. **View Books**: Use the `/books` endpoint to fetch all books or `/books/:id` to fetch a specific book.
+5. **Search Books**: Use the `/search` endpoint with a title query parameter.
+
+## Testing
+
+For testing, you can use tools like Postman to interact with the API endpoints. Ensure that the backend server is running before testing.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+If you have any questions, feel free to reach out to me at [temesgendebebe1921@example.com].
+
+---
+
