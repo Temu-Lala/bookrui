@@ -1,5 +1,5 @@
 'use client';
-'use client';
+
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -8,7 +8,13 @@ import {
 } from '@mui/material';
 import Booklogo from '../../../../public/assets/book.png'; // Adjust path if needed
 import Image from 'next/image';
-import {jwtDecode} from 'jwt-decode'; // Import jwt-decode at the top
+import {jwtDecode} from 'jwt-decode'; // Import jwt-decode
+
+// Define a type for the JWT payload
+interface DecodedToken {
+  role: string;
+  // Add any other properties you expect in the token here
+}
 
 const LoginPage = () => {
   const router = useRouter();
@@ -17,10 +23,10 @@ const LoginPage = () => {
     password: '',
   });
   const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState(null);
-  const [success, setSuccess] = React.useState(null);
+  const [error, setError] = React.useState<string | null>(null);
+  const [success, setSuccess] = React.useState<string | null>(null);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormValues({
       ...formValues,
@@ -28,7 +34,7 @@ const LoginPage = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setLoading(true);
@@ -47,7 +53,7 @@ const LoginPage = () => {
         localStorage.setItem('token', token); // Save JWT token to local storage
 
         // Decode the token to extract user role
-        const decodedToken = jwtDecode(token);
+        const decodedToken = jwtDecode<DecodedToken>(token);
         const userRole = decodedToken.role;
 
         setSuccess('Login successful!');
@@ -66,7 +72,7 @@ const LoginPage = () => {
         setError('Failed to log in');
       }
     } catch (err) {
-      setError("Login failed. Please try again.");
+      setError('Login failed. Please try again.');
       console.error(err);
     } finally {
       setLoading(false);

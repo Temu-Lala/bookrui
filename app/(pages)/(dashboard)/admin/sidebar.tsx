@@ -25,12 +25,13 @@ import { Button } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import InboxIcon from "@mui/icons-material/MoveToInbox"; // Add this import
+import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import Booklogo from '../../../../public/assets/book.png'
+import Booklogo from '../../../../public/assets/book.png';
+
 const drawerWidth = 240;
 
-const iconMap = {
+const iconMap: { [key: string]: React.ReactNode } = {
   Dashboard: <DashboardIcon sx={{ color: "white" }} />,
   "All Books": <CloudUploadIcon sx={{ color: "white" }} />,
   "All Users": <PreviewIcon sx={{ color: "white" }} />,
@@ -53,7 +54,6 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     duration: theme.transitions.duration.leavingScreen,
   }),
 }));
-
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -119,7 +119,6 @@ export default function PersistentDrawerLeft() {
         display: "flex",
         width: "100vw",
         height: "100vh",
-       
       }}
     >
       <CssBaseline />
@@ -159,15 +158,11 @@ export default function PersistentDrawerLeft() {
             {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
           <Image
-        src={Booklogo}
-        alt="Logo Image"
-        
-       
-        className=' w-14 h-14 rounded-2xl'
-      />
-          <Typography>Admin  
-            
-          </Typography>
+            src={Booklogo}
+            alt="Logo Image"
+            className="w-14 h-14 rounded-2xl"
+          />
+          <Typography>Admin</Typography>
         </DrawerHeader>
         <Divider />
         <List>

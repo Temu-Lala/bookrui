@@ -1,4 +1,3 @@
-// app/books/ProductCard.tsx
 "use client";
 
 import React from 'react';
@@ -24,11 +23,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           component="img"
           height="140"
           image={product.imagePath || 'https://via.placeholder.com/150'}
-          alt={product.name}
+          alt={product.title} 
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            {product.name}
+            {product.title} 
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Author: {product.author}
@@ -37,12 +36,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             Price: {product.price}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Genre: {product.gener}
+            Genre: {product.genre} 
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Genre: {product.publicationdate}
+            Publication Date: {product.publicationdate} 
           </Typography>
-          
         </CardContent>
       </CardActionArea>
     </Card>

@@ -5,7 +5,14 @@ import axios from 'axios';
 import {
     TextField, Button, Container, Grid, Typography, Box, MenuItem, Select, InputLabel, FormControl, Snackbar, Alert
 } from '@mui/material';
-import {jwtDecode} from 'jwt-decode'; 
+import  { jwtDecode, JwtPayload } from 'jwt-decode';
+
+// Define an interface for your JWT payload
+interface CustomJwtPayload extends JwtPayload {
+    role: string;
+    username: string;
+    email: string;
+}
 
 const genres = [
     "Science Fiction", "Fantasy", "Horror", "Mystery", "Thriller", "Romance",
@@ -31,14 +38,14 @@ export default function AddBook() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false); // State for controlling the success toast
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { name?: string | undefined; value: any }>) => {
         setBookDetails({
             ...bookDetails,
-            [e.target.name]: e.target.value
+            [e.target.name!]: e.target.value
         });
     };
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const token = localStorage.getItem('token');
@@ -48,7 +55,15 @@ export default function AddBook() {
             return;
         }
 
-        const decodedToken = jwtDecode(token);
+        let decodedToken: CustomJwtPayload;
+        try {
+            decodedToken = jwtDecode<CustomJwtPayload>(token);
+        } catch (err) {
+            console.error('Invalid token');
+            setError('Invalid token.');
+            return;
+        }
+
         if (decodedToken.role !== 'owner') {
             console.error('Unauthorized: Only owners can upload books');
             setError('You are not authorized to upload books.');

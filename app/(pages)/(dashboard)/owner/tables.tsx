@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -18,8 +18,8 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-} from '@mui/material';
-import { Edit, Delete } from '@mui/icons-material';
+} from "@mui/material";
+import { Edit, Delete } from "@mui/icons-material";
 import {
   MaterialReactTable,
   MRT_EditActionButtons,
@@ -27,14 +27,14 @@ import {
   type MRT_Row,
   type MRT_TableOptions,
   useMaterialReactTable,
-} from 'material-react-table';
+} from "material-react-table";
 import {
   QueryClient,
   QueryClientProvider,
   useMutation,
   useQuery,
   useQueryClient,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 
 // Define Book interface
 interface Book {
@@ -62,11 +62,13 @@ const deleteBook = async (bookId: number) => {
 // Function to decode JWT manually
 const decodeJWT = (token: string): any => {
   try {
-    const base64Payload = token.split('.')[1];
-    const decodedPayload = atob(base64Payload.replace(/_/g, '/').replace(/-/g, '+')); // Handle URL-safe base64
+    const base64Payload = token.split(".")[1];
+    const decodedPayload = atob(
+      base64Payload.replace(/_/g, "/").replace(/-/g, "+")
+    ); // Handle URL-safe base64
     return JSON.parse(decodedPayload);
   } catch (error) {
-    console.error('Error decoding JWT:', error);
+    console.error("Error decoding JWT:", error);
     return null;
   }
 };
@@ -78,13 +80,13 @@ const validateEmail = (email: string) =>
   email
     .toLowerCase()
     .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
 
 function validateBook(book: Book) {
   return {
-    title: !validateRequired(book.title) ? 'Title is Required' : '',
-    email: !validateEmail(book.email) ? 'Incorrect Email Format' : '',
+    title: !validateRequired(book.title) ? "Title is Required" : "",
+    email: !validateEmail(book.email) ? "Incorrect Email Format" : "",
   };
 }
 
@@ -97,13 +99,16 @@ const Tables: React.FC = () => {
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string | undefined>
   >({});
-  const [descriptionPopupOpen, setDescriptionPopupOpen] = useState<boolean>(false);
-  const [selectedDescription, setSelectedDescription] = useState<string | null>(null);
+  const [descriptionPopupOpen, setDescriptionPopupOpen] =
+    useState<boolean>(false);
+  const [selectedDescription, setSelectedDescription] = useState<string | null>(
+    null
+  );
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
   // Function to get username from token
   const getUsernameFromToken = (): string | null => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       const decoded = decodeJWT(token);
       return decoded?.username || null;
@@ -114,31 +119,34 @@ const Tables: React.FC = () => {
   const fetchUserData = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const user = username || getUsernameFromToken(); // Get username from state or decode JWT
-  
+
       if (!user) {
-        throw new Error('Username is required');
+        throw new Error("Username is required");
       }
-  
-      const response = await fetch(`http://localhost:3001/booksusername?username=${user}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+
+      const response = await fetch(
+        `http://localhost:3001/booksusername?username=${user}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
-      });
-  
+      );
+
       if (!response.ok) {
-        throw new Error('Failed to fetch user data');
+        throw new Error("Failed to fetch user data");
       }
-  
+
       // Directly handle array response
       const data: Book[] = await response.json();
-      console.log('Raw API response:', data); // Debugging line
+      console.log("Raw API response:", data); // Debugging line
       setBooks(data);
     } catch (error) {
-      console.error('Error loading user data:', error);
+      console.error("Error loading user data:", error);
     } finally {
       setLoading(false);
     }
@@ -157,12 +165,12 @@ const Tables: React.FC = () => {
 
   const handleEdit = async (book: Book) => {
     // Implement edit logic here
-    const updatedBook = { ...book, title: 'Updated Title' }; // Example modification
+    const updatedBook = { ...book, title: "Updated Title" }; // Example modification
     try {
       await updateBook(updatedBook);
       fetchUserData();
     } catch (error) {
-      console.error('Error updating book:', error);
+      console.error("Error updating book:", error);
     }
   };
 
@@ -172,7 +180,7 @@ const Tables: React.FC = () => {
       await deleteBook(bookId);
       fetchUserData();
     } catch (error) {
-      console.error('Error deleting book:', error);
+      console.error("Error deleting book:", error);
     }
   };
 
@@ -180,41 +188,41 @@ const Tables: React.FC = () => {
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
       {
-        accessorKey: 'title',
-        header: 'Title',
+        accessorKey: "title",
+        header: "Title",
         size: 150,
       },
       {
-        accessorKey: 'genre',
-        header: 'Genre',
+        accessorKey: "genre",
+        header: "Genre",
         size: 120,
       },
       {
-        accessorKey: 'price',
-        header: 'Price',
+        accessorKey: "price",
+        header: "Price",
         size: 100,
       },
       {
-        accessorKey: 'author',
-        header: 'Author',
+        accessorKey: "author",
+        header: "Author",
         size: 150,
       },
       {
-        accessorKey: 'publicationDate',
-        header: 'Publication Date',
+        accessorKey: "publicationDate",
+        header: "Publication Date",
         size: 150,
       },
       {
-        accessorKey: 'publisher',
-        header: 'Publisher',
+        accessorKey: "publisher",
+        header: "Publisher",
         size: 150,
       },
       {
-        accessorKey: 'description',
-        header: 'Description',
+        accessorKey: "description",
+        header: "Description",
         size: 200,
         muiTableBodyCellProps: {
-          sx: { cursor: 'pointer' },
+          sx: { cursor: "pointer" },
         },
         Cell: ({ cell }) => (
           <Typography
@@ -223,23 +231,25 @@ const Tables: React.FC = () => {
               setSelectedDescription(cell.getValue() as string);
               setDescriptionPopupOpen(true);
             }}
-            sx={{ cursor: 'pointer', color: 'primary.main' }}
+            sx={{ cursor: "pointer", color: "primary.main" }}
           >
-            {cell.getValue() ? `${(cell.getValue() as string).slice(0, 50)}...` : ''}
+            {cell.getValue()
+              ? `${(cell.getValue() as string).slice(0, 50)}...`
+              : ""}
           </Typography>
         ),
       },
       {
-        accessorKey: 'email',
-        header: 'Email',
+        accessorKey: "email",
+        header: "Email",
         size: 180,
       },
     ],
-    [],
+    []
   );
 
   // CREATE action
-  const handleCreateBook: MRT_TableOptions<Book>['onCreatingRowSave'] = async ({
+  const handleCreateBook: MRT_TableOptions<Book>["onCreatingRowSave"] = async ({
     values,
     table,
   }) => {
@@ -250,10 +260,10 @@ const Tables: React.FC = () => {
     }
     setValidationErrors({});
     await fetch(`http://localhost:3001/books`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(values),
     });
@@ -262,7 +272,7 @@ const Tables: React.FC = () => {
   };
 
   // UPDATE action
-  const handleSaveBook: MRT_TableOptions<Book>['onEditingRowSave'] = async ({
+  const handleSaveBook: MRT_TableOptions<Book>["onEditingRowSave"] = async ({
     values,
     table,
   }) => {
@@ -278,7 +288,7 @@ const Tables: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 2, maxWidth: '1000px' }}>
+    <Box sx={{ p: 2, maxWidth: "1000px" }}>
       <Typography variant="h6">Book Data</Typography>
       <TableContainer component={Paper}>
         {loading ? (
@@ -292,21 +302,21 @@ const Tables: React.FC = () => {
                 pageIndex: page,
                 pageSize: rowsPerPage, // Default rows per page
               },
-              columnSizing: { columnSizingMode: 'auto' }, // Compact by default
-              density: 'compact' // Set default density to compact
+              columnSizing: { columnSizingMode: "auto" }, // Compact by default
+              density: "compact", // Set default density to compact
             }}
             manualPagination
             onPaginationChange={setPage}
             onRowsPerPageChange={setRowsPerPage}
             pageCount={Math.ceil(books.length / rowsPerPage)}
             renderRowActions={({ row }) => (
-              <Box sx={{ display: 'flex', gap: 1 }}>
+              <Box sx={{ display: "flex", gap: 1 }}>
                 <Tooltip title="Edit">
                   <IconButton
                     onClick={() =>
                       handleEdit({
                         ...row.original,
-                        title: 'Updated Title', // Example update
+                        title: "Updated Title", // Example update
                       })
                     }
                   >
@@ -314,9 +324,7 @@ const Tables: React.FC = () => {
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Delete">
-                  <IconButton
-                    onClick={() => handleDelete(row.original.id)}
-                  >
+                  <IconButton onClick={() => handleDelete(row.original.id)}>
                     <Delete />
                   </IconButton>
                 </Tooltip>
@@ -324,11 +332,13 @@ const Tables: React.FC = () => {
             )}
             muiTableBodyRowProps={({ row }) => ({
               onClick: () => {
-                setExpandedRow(row.original.id === expandedRow ? null : row.original.id);
+                setExpandedRow(
+                  row.original.id === expandedRow ? null : row.original.id
+                );
               },
             })}
             muiTableContainerProps={{ sx: { maxHeight: 600 } }}
-            muiTableHeadCellProps={{ sx: { backgroundColor: '#f5f5f5' } }}
+            muiTableHeadCellProps={{ sx: { backgroundColor: "#f5f5f5" } }}
             muiTablePaginationProps={{
               rowsPerPageOptions: [3, 10, 25],
             }}

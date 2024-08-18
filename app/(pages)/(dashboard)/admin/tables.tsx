@@ -1,8 +1,10 @@
 'use client';
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { fetchUsers, updateUserRole } from './booksapi';
 import {
     MaterialReactTable,
+    MRT_Cell,
+    MRT_Row,
 } from 'material-react-table';
 import {
     Box,
@@ -13,11 +15,20 @@ import {
     Paper,
 } from '@mui/material';
 
-const UsersTable = () => {
-    const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
+interface User {
+    id: number;
+    username: string;
+    email: string;
+    location: string;
+    phone: string;
+    role: string;
+}
+
+const UsersTable: React.FC = () => {
+    const [users, setUsers] = useState<User[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string>('');
+    const [successMessage, setSuccessMessage] = useState<string>('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,7 +44,7 @@ const UsersTable = () => {
         fetchData();
     }, []);
 
-    const handleRoleChange = async (id: number, role: string) => {
+    const handleRoleChange = useCallback(async (id: number, role: string) => {
         try {
             await updateUserRole(id, role);
             setUsers(users.map(user => user.id === id ? { ...user, role } : user));
@@ -41,7 +52,7 @@ const UsersTable = () => {
         } catch (err) {
             setError('Failed to update role');
         }
-    };
+    }, [users]);
 
     const columns = useMemo(() => [
         { accessorKey: 'id', header: 'ID', enableEditing: false, size: 60 },
@@ -53,10 +64,10 @@ const UsersTable = () => {
             accessorKey: 'role',
             header: 'Role',
             size: 120,
-            Cell: ({ cell }) => (
+            Cell: ({ cell, row }: { cell: MRT_Cell<User>; row: MRT_Row<User> }) => (
                 <select
-                    value={cell.getValue()}
-                    onChange={(e) => handleRoleChange(cell.row.original.id, e.target.value)}
+                    value={cell.getValue<string>()}
+                    onChange={(e) => handleRoleChange(row.original.id, e.target.value)}
                     style={{ width: '100%' }}
                 >
                     <option value="user">User</option>
@@ -65,7 +76,7 @@ const UsersTable = () => {
                 </select>
             ),
         },
-    ], [users]);
+    ], [handleRoleChange]);
 
     if (loading) return <CircularProgress />;
     if (error) return <p>{error}</p>;
@@ -78,9 +89,9 @@ const UsersTable = () => {
                     columns={columns}
                     data={users}
                     enableEditing
-                    getRowId={(row) => row.id}
+                    getRowId={(row) => row.id.toString()} // Ensure row.id is a string
                     initialState={{
-                        pagination: { pageSize: 5 },  // Set page size to 5 rows
+                        // pagination: { pageSize: 5 },  // Set page size to 5 rows
                         density: 'compact',           // Set density to 'compact'
                     }}
                     muiTableProps={{

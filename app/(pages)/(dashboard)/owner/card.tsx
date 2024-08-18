@@ -27,7 +27,7 @@ export default function CardDemo() {
       >
         <CardContent>
           <Typography variant="h5" component="div" gutterBottom>
-            This Month's Statistics
+            This Months Statistics
           </Typography>
           <Typography variant="h6" color="text.primary">
             Income
@@ -43,7 +43,7 @@ export default function CardDemo() {
             ETB 34,355
           </Typography>
           <Typography variant="body2">
-            Detailed statistics of this month's earnings.
+            Detailed statistics of this months earnings.
           </Typography>
         </CardContent>
       </Card>

@@ -2,8 +2,20 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardMedia, CardContent, Typography, Grid, CircularProgress, Container } from '@mui/material';
 
+// Define the Product type
+interface Product {
+    id: string;
+    imagePath: string; // Match the actual property name in your database
+    title: string;
+    author: string;
+    price: string;
+    genre: string;
+    publicationDate: string; // Ensure this matches your backend schema
+}
+
 export default function Products() {
-    const [products, setProducts] = useState([]);
+    // Explicitly type the products state as an array of Product objects
+    const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -38,7 +50,7 @@ export default function Products() {
                         <CardMedia
                             component="img"
                             height="200"
-                            image={product.imagepath} // Update to match your DB schema
+                            image={product.imagePath} // Update to match your DB schema
                             alt={product.title}
                         />
                         <CardContent>
@@ -46,18 +58,17 @@ export default function Products() {
                                 {product.title}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                                {product.author}
+                                Author: {product.author}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                                {product.price}
+                                Price: {product.price}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                                {product.genre}
+                                Genre: {product.genre}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                                {product.publicationdate}
+                                Publication Date: {product.publicationDate}
                             </Typography>
-                            
                         </CardContent>
                     </Card>
                 </Grid>

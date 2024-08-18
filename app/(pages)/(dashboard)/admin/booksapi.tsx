@@ -7,7 +7,7 @@ export const fetchUsers = async () => {
   return response.json();
 };
 
-export const updateUserRole = async (id, role) => {
+export const updateUserRole = async (id: number, role: string) => {
   const response = await fetch(`http://localhost:3001/users/${id}/role`, {
       method: 'PUT',
       headers: {
