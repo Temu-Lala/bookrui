@@ -25,7 +25,7 @@ Bookr is a modern book management application built using Next.js, Node.js, Post
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/your-username/bookr.git
+   git clone (https://github.com/Temu-Lala)/bookr.git
    cd bookr
    ```
 
@@ -40,6 +40,7 @@ Bookr is a modern book management application built using Next.js, Node.js, Post
    ```bash
    npm install
    ```
+#dont forget to get bookrbackend 
 
 4. **Set Up PostgreSQL:**
    
